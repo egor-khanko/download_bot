@@ -1,0 +1,10 @@
+version: '3'
+services:
+  bot:
+    image: vanopiano/download_bot:latest
+    build:
+      context: .
+    restart: on-failure
+    env_file: [.env]
+    volumes:
+      - ./data:/app/data
