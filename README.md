@@ -1,4 +1,7 @@
 # YT Download bot
+
+[![Docker Image CI](https://github.com/ivan-leschinsky/download_bot/actions/workflows/docker-image.yml/badge.svg)](https://github.com/ivan-leschinsky/download_bot/actions/workflows/docker-image.yml)
+
 ### Telegram bot to download files wih "youtube-dl"-like programs
 
 Select youtube-dl, I like this one: https://github.com/yt-dlp/yt-dlp
