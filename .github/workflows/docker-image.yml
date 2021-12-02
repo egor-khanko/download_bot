@@ -32,3 +32,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Notify about build
+        uses: distributhor/workflow-webhook@v2
+        env:
+          webhook_url: ${{ secrets.BUILD_WEBHOOK_URL }}
