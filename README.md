@@ -4,12 +4,15 @@
 
 ### Telegram bot to download files with "youtube-dl"-like programs
 
+About `PGID` and `PUID`: https://docs.linuxserver.io/general/understanding-puid-and-pgid
 
 ### Run in production:
 .env example:
 ```
 BOT_TOKEN=XXXXXXX
 USER_TO_SEND=XXXXXXX
+PUID=1000
+PGID=1000
 YDL_OPTIONS="--video-multistreams --merge-output-format mp4"
 DOWNLOAD_DIR=./data
 FILE_FORMAT="%(uploader)s/%(upload_date)s.%(title)s.%(id)s.%(ext)s"
@@ -30,7 +33,6 @@ Run:
 ```sh
   docker-compose up -d
 ```
-
 
 ### Run in development without docker:
 1. Fill .env from .env.sample with your bot token and user
