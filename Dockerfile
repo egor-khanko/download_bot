@@ -13,8 +13,6 @@ RUN chmod a+rx /usr/local/bin/youtube-dl
 
 COPY --from=mwader/static-ffmpeg:4.4.1 /ffmpeg /usr/local/bin/
 
-RUN groupadd app && useradd -M -d $PROJECT_ROOT -s /bin/false -g app app
-
 WORKDIR $PROJECT_ROOT
 
 RUN gem install bundler --no-document && \
@@ -24,9 +22,6 @@ COPY Gemfile* ./
 RUN bundle install
 
 COPY . .
-
-RUN chown -R app:app $PROJECT_ROOT
-USER app
 
 VOLUME ["/app/data"]
 
