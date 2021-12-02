@@ -5,6 +5,9 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    climate_control (0.2.0)
+    cocaine (0.6.0)
+      terrapin (= 0.6.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     descendants_tracker (0.0.4)
@@ -37,11 +40,15 @@ GEM
       dry-inflector
       faraday
       virtus (~> 2.0)
+    terrapin (0.6.0)
+      climate_control (>= 0.0.3, < 1.0)
     thread_safe (0.3.6)
     virtus (2.0.0)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
+    youtube-dl.rb (0.3.1.2016.09.11.1)
+      cocaine (>= 0.5.4)
 
 PLATFORMS
   86_64-linux
@@ -50,6 +57,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   telegram-bot-ruby (~> 0.16.0)
+  youtube-dl.rb
 
 BUNDLED WITH
    2.2.32

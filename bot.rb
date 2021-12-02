@@ -1,15 +1,13 @@
 #!/usr/bin/env ruby
 
 require 'telegram/bot'
-require 'json'
-require 'open3'
 require 'uri'
+require 'youtube-dl.rb'
 require 'dotenv/load' unless ENV['PRODUCTION'] # for development without docker
 
 DOWNLOAD_DIR = ENV['DOWNLOAD_DIR']
 FILE_FORMAT = ENV['FILE_FORMAT']
-YDL_OPTIONS = ENV['YDL_OPTIONS']
-YDL_PATH = ENV.fetch('YDL_PATH', 'youtube-dl')
+MERGE_OUTPUT_FORMAT = ENV['MERGE_OUTPUT_FORMAT']
 
 class DownloadJob
   class << self
@@ -18,20 +16,18 @@ class DownloadJob
     end
 
     def perform(link)
-      title = JSON.parse(`#{YDL_PATH} -j #{link}`)['title']
-      BotHandler.send_msg("Downloading \"#{title}\"")
+      options = {
+        path: DOWNLOAD_DIR,
+        merge_output_format: MERGE_OUTPUT_FORMAT,
+        output: FILE_FORMAT,
+        video_multistreams: true
+      }
 
-      command = "#{YDL_PATH} -o '#{FILE_FORMAT}' #{YDL_OPTIONS} -P '#{DOWNLOAD_DIR}' #{link}"
+      video = YoutubeDL::Video.new(link, options)
+      BotHandler.send_msg("Downloading: \"#{video.information[:title]}\"")
 
-      Open3.popen3(command) do |stdin, stdout, stderr, wait_thr|
-        error_text = stderr.read
-
-        if error_text.empty?
-          BotHandler.send_msg("Download completed for \"#{title}\"")
-        else
-          BotHandler.send_msg("Something went wrong while downloading:\n #{error_text}")
-        end
-      end
+      video.download
+      BotHandler.send_msg("Download completed: \"#{video.information[:title]}\"")
     end
   end
 end
@@ -49,7 +45,7 @@ class BotHandler
       if message.text.include?('youtu') && message.text =~ URI::regexp
         DownloadJob.perform_async(message.text)
       else
-        send_msg("I can download only from YouTube")
+        send_msg('I can download only from YouTube')
       end
     end
 

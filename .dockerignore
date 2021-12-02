@@ -1,5 +1,6 @@
 .git
 data
+.cache
 .env
 .env.sample
 .ruby-version
