@@ -32,7 +32,8 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Notify about build
-        uses: distributhor/workflow-webhook@v2
-        env:
-          webhook_url: ${{ secrets.BUILD_WEBHOOK_URL }}
+      - uses: haishanh/actions-telegram-notification@v1
+        with:
+          bot-token: ${{ secrets.NOTIFY_BOT_TOKEN }}
+          chat-id: ${{ secrets.NOTIFY_BOT_CHAT_ID }}
+          job-status: ${{ job.status }}
