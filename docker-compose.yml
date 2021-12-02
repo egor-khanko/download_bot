@@ -6,5 +6,8 @@ services:
       context: .
     restart: on-failure
     env_file: [.env]
+    environment:
+      PUID: 1000
+      PGID: 1000
     volumes:
       - ./data:/app/data
