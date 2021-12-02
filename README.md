@@ -1,6 +1,6 @@
 # [YT Download bot](https://github.com/ivan-leschinsky/download_bot/)
 
-[![Docker Image Build](https://github.com/ivan-leschinsky/download_bot/actions/workflows/docker-image.yml/badge.svg)](https://github.com/ivan-leschinsky/download_bot/actions/workflows/docker-image.yml)
+[![Docker Image](https://github.com/ivan-leschinsky/download_bot/actions/workflows/docker_image.yml/badge.svg)](https://github.com/ivan-leschinsky/download_bot/actions/workflows/docker_image.yml)
 [![Docker latest version](https://img.shields.io/docker/v/vanopiano/download_bot.svg?sort=semver&color=success)](https://hub.docker.com/r/vanopiano/download_bot)
 [![Docker Image size](https://img.shields.io/docker/image-size/vanopiano/download_bot.svg?sort=date)](https://hub.docker.com/r/vanopiano/download_bot/tags)
 [![Docker Pulls](https://img.shields.io/docker/pulls/vanopiano/download_bot.svg)](https://hub.docker.com/r/vanopiano/download_bot)
