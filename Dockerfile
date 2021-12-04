@@ -23,6 +23,8 @@ RUN bundle install
 
 COPY . .
 
+COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/
+
 VOLUME ["/app/data"]
 
 CMD ["./entrypoint.sh"]

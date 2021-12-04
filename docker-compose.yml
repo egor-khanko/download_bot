@@ -10,4 +10,10 @@ services:
       PUID: 1000
       PGID: 1000
     volumes:
-      - ./data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  downloader:
+    image: vanopiano/download_ytdl:latest
+    build:
+      dockerfile: Dockerfile.ytdl
+    restart: on-failure

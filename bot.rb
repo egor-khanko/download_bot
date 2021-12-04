@@ -6,10 +6,18 @@ require 'open3'
 require 'uri'
 require 'dotenv/load' unless ENV['PRODUCTION'] # for development without docker
 
-DOWNLOAD_DIR = ENV['DOWNLOAD_DIR']
 FILE_FORMAT = ENV['FILE_FORMAT']
 YDL_OPTIONS = ENV['YDL_OPTIONS']
+DOWNLOAD_IN_DOCKER = ENV['DOWNLOAD_IN_DOCKER'] == 'true'
+DOCKER_VOLUME = ENV['DOCKER_VOLUME']
+DOCKER_MOUNT_PATH = ENV['DOCKER_MOUNT_PATH'] || '/downloads'
+DOCKER_IMAGE = ENV['DOCKER_IMAGE'] || 'vanopiano/download_ytdl:latest'
+
+DOWNLOAD_DIR = ENV['DOWNLOAD_DIR'] || (DOWNLOAD_IN_DOCKER ? '/downloads' : './data')
+
 YDL_PATH = ENV.fetch('YDL_PATH', 'youtube-dl')
+
+TELEGRAM_MAX_LENGTH = 4096
 
 class DownloadJob
   class << self
@@ -18,16 +26,28 @@ class DownloadJob
     end
 
     def perform(link)
-      title = JSON.parse(`#{YDL_PATH} -j #{link}`)['title']
+      video_data = JSON.parse(`#{YDL_PATH} -j #{link}`)
+      title = video_data['title']
+
       BotHandler.send_msg("Downloading \"#{title}\"")
 
-      command = "#{YDL_PATH} -o '#{FILE_FORMAT}' #{YDL_OPTIONS} -P '#{DOWNLOAD_DIR}' #{link}"
+      options = "-o '#{FILE_FORMAT}' #{YDL_OPTIONS} -P '#{DOWNLOAD_DIR}' #{link}"
 
-      Open3.popen3(command) do |stdin, stdout, stderr, wait_thr|
+      base_command = YDL_PATH
+      if DOWNLOAD_IN_DOCKER
+        base_command = "docker run -d --rm --name ydl_#{video_data['id']} "\
+                       "-v #{DOCKER_VOLUME}:#{DOCKER_MOUNT_PATH} #{DOCKER_IMAGE}"
+      end
+
+      Open3.popen3("#{base_command} #{options}") do |stdin, stdout, stderr, wait_thr|
         error_text = stderr.read
 
         if error_text.empty?
-          BotHandler.send_msg("Download completed for \"#{title}\"")
+          if DOWNLOAD_IN_DOCKER
+            BotHandler.send_msg("Download started in Docker for \"#{title}\"")
+          else
+            BotHandler.send_msg("Download completed for \"#{title}\"")
+          end
         else
           BotHandler.send_msg("Something went wrong while downloading:\n #{error_text}")
         end
@@ -47,7 +67,7 @@ class BotHandler
 
     def handle(message)
       if message.text.include?('youtu') && message.text =~ URI::regexp
-        DownloadJob.perform_async(message.text)
+        DownloadJob.perform(message.text)
       else
         send_msg('I can download only from YouTube')
       end
@@ -63,7 +83,11 @@ class BotHandler
     end
 
     def send_msg(text)
-      bot_api.send_message(chat_id: USER_TO_SEND, text: text, disable_web_page_preview: true)
+      texts_array = text.scan /.{1,#{TELEGRAM_MAX_LENGTH}}/
+      # to allow sending large text
+      texts_array.each do |small_text|
+        bot_api.send_message(chat_id: USER_TO_SEND, text: small_text, disable_web_page_preview: true)
+      end
     end
 
     def bot

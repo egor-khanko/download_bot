@@ -1,0 +1,17 @@
+FROM python:slim
+
+LABEL maintainer="vanopiano"
+
+RUN /bin/sh -c set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends      ca-certificates         curl; \
+    rm -rf /var/lib/apt/lists/*
+
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/local/bin/youtube-dl
+RUN chmod a+rx /usr/local/bin/youtube-dl
+
+COPY --from=mwader/static-ffmpeg:4.4.1 /ffmpeg /usr/local/bin/
+
+VOLUME ["/download"]
+
+ENTRYPOINT /usr/local/bin/youtube-dl

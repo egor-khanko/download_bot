@@ -7,7 +7,31 @@
 
 ### Telegram bot to download files with "youtube-dl"-like programs
 
-### Run in production:
+### Run in production with download in separate docker container:
+By default downloads runs in `vanopiano/download_ytdl:latest`: [![Docker latest version](https://img.shields.io/docker/v/vanopiano/download_ytdl.svg?sort=date&color=success)](https://hub.docker.com/r/vanopiano/download_ytdl)
+Can be changed via `DOCKER_IMAGE` variable.
+
+Need to mount `/var/run/docker.sock:/var/run/docker.sock` in order to use this type of run
+
+.env example:
+```sh
+BOT_TOKEN=XXXXXXX
+USER_TO_SEND=XXXXXXX
+YDL_OPTIONS="--video-multistreams --merge-output-format mp4"
+FILE_FORMAT="%(uploader)s/%(upload_date)s.%(title)s.%(id)s.%(ext)s"
+DOWNLOAD_DIR=/downloads
+DOWNLOAD_IN_DOCKER=false
+DOCKER_MOUNT_PATH=/downloads # default
+# required, it needs to be absolute path or docker volume
+DOCKER_VOLUME=download-volume
+DOCKER_IMAGE=vanopiano/download_ytdl:latest # default
+DEV=1
+
+```
+`DOWNLOAD_DIR` used as `-P` parameter for yt-dlp, so it can include some path inside mounted dir (`DOCKER_MOUNT_PATH` variable).
+`DOCKER_VOLUME` - volume to mount as `DOCKER_MOUNT_PATH` inside download docker image (`DOCKER_IMAGE`)
+
+### Run in production without additional container:
 .env example:
 ```
 BOT_TOKEN=XXXXXXX
