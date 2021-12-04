@@ -8,9 +8,12 @@
 ### Telegram bot to download files with "youtube-dl"-like programs
 ---
 ### Run in production with download in separate docker container:
-By default downloads runs in `vanopiano/download_ytdl:latest`: [![Docker latest version](https://img.shields.io/docker/v/vanopiano/download_ytdl.svg?sort=date&color=success)](https://hub.docker.com/r/vanopiano/download_ytdl)
+By default downloads runs in `vanopiano/download_ytdl:latest` which can be changed with `DOCKER_IMAGE` variable:
 
-Can be changed via `DOCKER_IMAGE` variable.
+
+[![Docker latest version](https://img.shields.io/docker/v/vanopiano/download_ytdl.svg?sort=date&color=success)](https://hub.docker.com/r/vanopiano/download_ytdl)
+[![Docker Image size](https://img.shields.io/docker/image-size/vanopiano/download_ytdl.svg?sort=date)](https://hub.docker.com/r/vanopiano/download_ytdl/tags)
+[![Docker Pulls](https://img.shields.io/docker/pulls/vanopiano/download_ytdl.svg)](https://hub.docker.com/r/vanopiano/download_ytdl)
 
 Need to mount `/var/run/docker.sock:/var/run/docker.sock` in order to use this type of run
 
