@@ -17,3 +17,4 @@ jobs:
         with:
           file: Dockerfile.ytdl
           tags: vanopiano/download_ytdl:latest
+          push: true
