@@ -36,8 +36,10 @@ class DownloadJob
       base_command = YDL_PATH
       if DOWNLOAD_IN_DOCKER
         base_command = "docker run -d --rm --name ydl_#{video_data['id']} "\
-                       "-v #{DOCKER_VOLUME}:#{DOCKER_MOUNT_PATH} #{DOCKER_IMAGE}"
+                       "-v #{DOCKER_VOLUME}:#{DOCKER_MOUNT_PATH} #{DOCKER_IMAGE} #{YDL_PATH}"
       end
+
+      puts "#{base_command} #{options}" unless ENV['PRODUCTION']
 
       Open3.popen3("#{base_command} #{options}") do |stdin, stdout, stderr, wait_thr|
         error_text = stderr.read

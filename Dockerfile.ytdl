@@ -14,4 +14,4 @@ COPY --from=mwader/static-ffmpeg:4.4.1 /ffmpeg /usr/local/bin/
 
 VOLUME ["/download"]
 
-ENTRYPOINT /usr/local/bin/youtube-dl
+CMD /usr/local/bin/youtube-dl

@@ -6,13 +6,12 @@ services:
       context: .
     restart: on-failure
     env_file: [.env]
-    environment:
-      PUID: 1000
-      PGID: 1000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      # for debug
+      # - ./:/app
 
-  downloader:
+  ytdl:
     image: vanopiano/download_ytdl:latest
     build:
       dockerfile: Dockerfile.ytdl
